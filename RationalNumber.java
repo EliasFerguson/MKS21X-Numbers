@@ -8,10 +8,19 @@ public class RationalNumber extends RealNumber {
   */
   public RationalNumber(int nume, int deno){
     super(0);//this value is ignored!
+    if (deno == 0) {
+      numerator = 0;
+      denominator = 1;
+    }
+    else {
+      denominator = deno;
+      numerator = nume;
+    }
+    reduce();
   }
 
   public double getValue(){
-    return numerator / denominator;//???
+    return (double)numerator / (double)denominator;//???
   }
 
   /**
@@ -31,7 +40,7 @@ public class RationalNumber extends RealNumber {
   *and denominator as this RationalNumber but reversed.
   */
   public RationalNumber reciprocal(){
-    return denominator / numerator;
+    return new RationalNumber(denominator, numerator);
   }
   /**
   *@return true when the RationalNumbers have the same numerators and denominators, false otherwise.
@@ -54,13 +63,20 @@ public class RationalNumber extends RealNumber {
 
 
   /**Calculate the GCD of two integers.
-  *@param a the first integers
+  *@param a the first integer
   *@param b the second integer
   *@return the value of the GCD
   */
   private static int gcd(int a, int b){
-    /*use euclids method or a better one*/
-    return 0;
+    int big = Math.max(Math.abs(a), Math.abs(b));
+    int small = Math.min(Math.abs(a), Math.abs(b));
+    int remainder;
+    while (small != 0) {
+      remainder = big % small;
+      big = small;
+      small = remainder;
+    }
+    return big;
   }
 
 
@@ -71,7 +87,13 @@ public class RationalNumber extends RealNumber {
   *reduced after construction.
   */
   private void reduce(){
-
+    int divisor = gcd(numerator, denominator);
+    numerator = numerator / divisor;
+    denominator = denominator / divisor;
+    if (denominator < 0) {
+      numerator *= -1;
+      denominator *= -1;
+    }
   }
 
 
@@ -83,26 +105,34 @@ public class RationalNumber extends RealNumber {
   *Return a new RationalNumber that is the product of this and the other
   */
   public RationalNumber multiply(RationalNumber other){
-    return null;
+    int num = this.numerator * other.numerator;
+    int den = this.denominator * other.denominator;
+    return new RationalNumber(num, den);
   }
 
   /**
   *Return a new RationalNumber that is the this divided by the other
   */
   public RationalNumber divide(RationalNumber other){
-    return null;
+    int num = this.numerator * other.denominator;
+    int den = this.denominator * other.numerator;
+    return new RationalNumber(num, den);
   }
 
   /**
   *Return a new RationalNumber that is the sum of this and the other
   */
   public RationalNumber add(RationalNumber other){
-    return null;
+    int num = ((this.numerator * other.denominator) + (other.numerator * this.denominator));
+    int den = this.denominator * other.denominator;
+    return new RationalNumber(num, den);
   }
   /**
   *Return a new RationalNumber that this minus the other
   */
   public RationalNumber subtract(RationalNumber other){
-    return null;
+    int num = ((this.numerator * other.denominator) - (other.numerator * this.denominator));
+    int den = this.denominator * other.denominator;
+    return new RationalNumber(num, den);
   }
 }
